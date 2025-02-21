@@ -18,5 +18,19 @@
     }
     next();
 }
+async function GetUsers(req,res,next){
+    const Query = `SELECT * FROM users `;
+    const promisePool = db_pool.promise();
+    let rows=[];
+    try {
+        [rows] = await promisePool.query(Query);
+        req.success=true;
+        req.all_users=rows;
+    } catch (err) {
+        req.success=false;
+        console.log(err);
+    }
+    next();
+}
 
-module.exports = {AddUsers}
+module.exports = {AddUsers,GetUsers}
