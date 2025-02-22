@@ -13,8 +13,8 @@ app.use(express.static(path.join(__dirname, "public")));
 let db_M = require('./database');
 global.db_pool = db_M.pool;
 //
-const bm_R=require('./Routers/bm_R');
-app.use('/',bm_R);
+const measures_R=require('./Routers/measures_R');
+app.use('/',measures_R);
 
 const users_R=require('./Routers/users_R');
 app.use('/',users_R);
