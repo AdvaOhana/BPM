@@ -11,3 +11,10 @@ router.post('/measures', [measures_Mid.AddMeasures],(req, res) => {
         return res.status(500).json({message: err});
     }
 });
+router.get('/measures',[measures_Mid.GetMeasures], (req, res) => {
+    if(req.success){
+        res.status(200).json({msg:"ok",data:req.all_measures});
+    } else {
+        return res.status(500).json({message: err});
+    }
+});

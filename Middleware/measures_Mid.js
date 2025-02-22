@@ -27,4 +27,18 @@ async function AddMeasures(req, res,next) {
     }
     next();
 }
-module.exports={AddMeasures};
+async function GetMeasures(req,res,next){
+    let Query = `SELECT * FROM measures `;
+    const promisePool = db_pool.promise();
+    let rows=[];
+    try {
+        [rows] = await promisePool.query(Query);
+        req.success=true;
+        req.all_measures=rows;
+    } catch (err) {
+        req.success=false;
+        console.log(err);
+    }
+    next();
+}
+module.exports={AddMeasures,GetMeasures};
