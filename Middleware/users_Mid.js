@@ -32,5 +32,23 @@ async function GetUsers(req,res,next){
     }
     next();
 }
+async function UpdateUsers(req,res,next){
+    let idx             = req.body.idx;
+    let user_name     = req.body.user_name;
 
-module.exports = {AddUsers,GetUsers}
+    let Query = `UPDATE users SET `;
+    Query += ` full_name = '${user_name}' `;
+    Query += ` WHERE id = ${idx} `;
+    const promisePool = db_pool.promise();
+    let rows=[];
+    try {
+        [rows] = await promisePool.query(Query);
+        req.success=true;
+    } catch (err) {
+        req.success=false;
+        console.log(err);
+    }
+    next();
+}
+
+module.exports = {AddUsers,GetUsers,UpdateUsers}
