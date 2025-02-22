@@ -50,5 +50,20 @@ async function UpdateUsers(req,res,next){
     }
     next();
 }
+async function DeleteUsers(req,res,next){
+    let idx             = req.body.idx;
+    let Query = `DELETE FROM users  `;
+    Query += ` WHERE id = ${idx} `;
+    const promisePool = db_pool.promise();
+    let rows=[];
+    try {
+        [rows] = await promisePool.query(Query);
+        req.success=true;
+    } catch (err) {
+        req.success=false;
+        console.log(err);
+    }
+    next();
+}
 
-module.exports = {AddUsers,GetUsers,UpdateUsers}
+module.exports = {AddUsers,GetUsers,UpdateUsers,DeleteUsers}

@@ -25,4 +25,10 @@ router.put('/users',[users_Mid.UpdateUsers],  (req, res) => {
         return res.status(500).json({message: err});
     }
 });
-
+router.delete('/users',[users_Mid.DeleteUsers], (req, res) => {
+    if(req.success){
+        res.status(200).json({msg:"ok"});
+    } else {
+        return res.status(500).json({message: err});
+    }
+});
