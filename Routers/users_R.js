@@ -18,6 +18,13 @@ router.get('/users',[users_Mid.GetUsers], (req, res) => {
         return res.status(500).json({message: err});
     }
 });
+router.get('/userById',[users_Mid.GetUserById], (req, res) => {
+    if(req.success){
+        res.status(200).json({msg:"ok",data:req.userById});
+    } else {
+        return res.status(500).json({message: err});
+    }
+});
 router.put('/users',[users_Mid.UpdateUsers],  (req, res) => {
     if(req.success){
         res.status(200).json({msg:"ok"});

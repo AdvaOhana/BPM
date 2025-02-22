@@ -19,7 +19,7 @@
     next();
 }
 async function GetUsers(req,res,next){
-    const Query = `SELECT * FROM users `;
+    let Query = `SELECT * FROM users `;
     const promisePool = db_pool.promise();
     let rows=[];
     try {
@@ -65,5 +65,21 @@ async function DeleteUsers(req,res,next){
     }
     next();
 }
+async function GetUserById(req,res,next){
+    let idx             = req.body.idx;
+    let Query = `SELECT * FROM users `;
+    Query += ` WHERE id = ${idx} `;
+    const promisePool = db_pool.promise();
+    let rows=[];
+    try {
+        [rows] = await promisePool.query(Query);
+        req.success=true;
+        req.userById=rows;
+    } catch (err) {
+        req.success=false;
+        console.log(err);
+    }
+    next();
+}
 
-module.exports = {AddUsers,GetUsers,UpdateUsers,DeleteUsers}
+module.exports = {AddUsers,GetUsers,UpdateUsers,DeleteUsers,GetUserById}
