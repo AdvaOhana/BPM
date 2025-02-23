@@ -26,7 +26,7 @@ router.get('/measuresByUId',[measures_Mid.GetMeasuresByUId], (req, res) => {
         return res.status(500).json({message: err});
     }
 });
-router.get('/measuresAvg',[measures_Mid.GetMeasuresAvg,measures_Mid.GetMeasuresByUId], (req, res) => {
+router.get('/measuresAvg',[measures_Mid.GetMeasuresAvg,measures_Mid.GetMeasuresByUId,measures_Mid.CriticalMeasures], (req, res) => {
     if(req.success){
         res.status(200).json({msg:"ok",data:req.criticalData});
     } else {

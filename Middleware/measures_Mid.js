@@ -142,5 +142,16 @@ async function GetMeasuresAvg(req,res,next){
     }
     next();
 }
-
-module.exports={AddMeasures,GetMeasures,UpdateMeasures,DeleteMeasures,GetMeasuresByUId,GetMeasuresAvg};
+async function CriticalMeasures(req,res,next){
+    let measuresAvg= req.measuresAvg;
+    let measuresByUId= req.measuresByUId;
+    measuresByUId.forEach((measure)=>{
+        if (measure.sys_high > measuresAvg[0].sysAvg * 1.2 ||measure.dia_low > measuresAvg[0].diaAvg * 1.2||measure.pulse > measuresAvg[0].pulseAvg * 1.2 ){
+            measure.critical=true;
+        }
+        else{measure.critical=false;}
+    })
+    req.criticalData=measuresByUId;
+    next();
+}
+module.exports={AddMeasures,GetMeasures,UpdateMeasures,DeleteMeasures,GetMeasuresByUId,GetMeasuresAvg,CriticalMeasures};
