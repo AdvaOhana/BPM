@@ -3,6 +3,7 @@ const router = express.Router();
 module.exports = router;
 
 const measures_Mid =require('../Middleware/measures_Mid');
+const users_Mid = require("../Middleware/users_Mid");
 
 router.post('/measures', [measures_Mid.AddMeasures],(req, res) => {
     if(req.success){
@@ -14,6 +15,13 @@ router.post('/measures', [measures_Mid.AddMeasures],(req, res) => {
 router.get('/measures',[measures_Mid.GetMeasures], (req, res) => {
     if(req.success){
         res.status(200).json({msg:"ok",data:req.all_measures});
+    } else {
+        return res.status(500).json({message: err});
+    }
+});
+router.get('/measuresByUId',[measures_Mid.GetMeasuresByUId], (req, res) => {
+    if(req.success){
+        res.status(200).json({msg:"ok",data:req.measuresByUId});
     } else {
         return res.status(500).json({message: err});
     }

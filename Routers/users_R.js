@@ -2,7 +2,7 @@
 const router = express.Router();
 module.exports = router;
 
-const users_Mid =require('../middleware/users_Mid');
+const users_Mid =require('../Middleware/users_Mid');
 
 router.post('/users', [users_Mid.AddUsers],(req, res) => {
     if(req.success){

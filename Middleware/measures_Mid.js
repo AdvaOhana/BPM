@@ -42,7 +42,7 @@ async function GetMeasures(req,res,next){
     next();
 }
 async function UpdateMeasures(req,res,next){
-    let idx             = req.body.idx;
+    let idx             = parseInt(req.body.idx);
     let date= new Date().toISOString().split("T")[0];
     let sys_high= Number(req.body.sys_high);
     let dia_low= Number(req.body.dia_low);
@@ -72,7 +72,7 @@ async function UpdateMeasures(req,res,next){
     next();
 }
 async function DeleteMeasures(req,res,next){
-    let idx             = req.body.idx;
+    let idx  = parseInt(req.body.idx);
     let Query = `DELETE FROM measures  `;
     Query += ` WHERE id = ${idx} `;
     const promisePool = db_pool.promise();
@@ -86,4 +86,21 @@ async function DeleteMeasures(req,res,next){
     }
     next();
 }
-module.exports={AddMeasures,GetMeasures,UpdateMeasures,DeleteMeasures};
+async function GetMeasuresByUId(req,res,next){
+    let user_id= parseInt(req.body.user_id);
+
+    let Query = `SELECT * FROM measures `;
+    Query += ` WHERE user_id = ${user_id} `;
+    const promisePool = db_pool.promise();
+    let rows=[];
+    try {
+        [rows] = await promisePool.query(Query);
+        req.success=true;
+        req.measuresByUId=rows;
+    } catch (err) {
+        req.success=false;
+        console.log(err);
+    }
+    next();
+}
+module.exports={AddMeasures,GetMeasures,UpdateMeasures,DeleteMeasures,GetMeasuresByUId};
