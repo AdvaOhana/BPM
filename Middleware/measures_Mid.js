@@ -1,3 +1,5 @@
+const {isBefore, isSameDay}= require('date-fns');
+
 async function AddMeasures(req, res,next) {
     let user_id    = parseInt(req.body.user_id);
     let date=  new Date().toISOString().split("T")[0];
@@ -88,9 +90,18 @@ async function DeleteMeasures(req,res,next){
 }
 async function GetMeasuresByUId(req,res,next){
     let user_id= parseInt(req.body.user_id);
+    let dates= req.body;
+
+    if (user_id === undefined)throw new Error('Id is not valid, please check again.');
 
     let Query = `SELECT * FROM measures `;
     Query += ` WHERE user_id = ${user_id} `;
+
+    if (dates.startDate && dates.endDate){
+        if (isBefore(dates.startDate,dates.endDate) || isSameDay(dates.endDate,dates.startDate)){
+            Query += ` AND date BETWEEN '${dates.startDate}' AND '${dates.endDate}'  `;
+        }
+    }
     const promisePool = db_pool.promise();
     let rows=[];
     try {
