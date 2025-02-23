@@ -114,4 +114,33 @@ async function GetMeasuresByUId(req,res,next){
     }
     next();
 }
-module.exports={AddMeasures,GetMeasures,UpdateMeasures,DeleteMeasures,GetMeasuresByUId};
+async function GetMeasuresAvg(req,res,next){
+    let user_id= parseInt(req.body.user_id);
+    let dates= req.body;
+
+    if (user_id === undefined)throw new Error('Id is not valid, please check again.');
+
+    let Query = `SELECT avg(sys_high) AS sysAvg, avg(dia_low) AS diaAvg,avg(pulse) AS pulseAvg FROM measures `;
+    Query += ` WHERE user_id = ${user_id} `;
+
+    if (dates.startDate && dates.endDate){
+        if (isBefore(dates.startDate,dates.endDate) || isSameDay(dates.endDate,dates.startDate)){
+            Query += ` AND date BETWEEN '${dates.startDate}' AND '${dates.endDate}'  `;
+        }
+    }
+    Query += ` GROUP BY user_id `;
+
+    const promisePool = db_pool.promise();
+    let rows=[];
+    try {
+        [rows] = await promisePool.query(Query);
+        req.success=true;
+        req.measuresAvg=rows;
+    } catch (err) {
+        req.success=false;
+        console.log(err);
+    }
+    next();
+}
+
+module.exports={AddMeasures,GetMeasures,UpdateMeasures,DeleteMeasures,GetMeasuresByUId,GetMeasuresAvg};
