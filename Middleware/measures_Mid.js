@@ -71,4 +71,19 @@ async function UpdateMeasures(req,res,next){
     }
     next();
 }
-module.exports={AddMeasures,GetMeasures,UpdateMeasures};
+async function DeleteMeasures(req,res,next){
+    let idx             = req.body.idx;
+    let Query = `DELETE FROM measures  `;
+    Query += ` WHERE id = ${idx} `;
+    const promisePool = db_pool.promise();
+    let rows=[];
+    try {
+        [rows] = await promisePool.query(Query);
+        req.success=true;
+    } catch (err) {
+        req.success=false;
+        console.log(err);
+    }
+    next();
+}
+module.exports={AddMeasures,GetMeasures,UpdateMeasures,DeleteMeasures};

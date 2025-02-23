@@ -25,17 +25,10 @@ router.put('/measures',[measures_Mid.UpdateMeasures],  (req, res) => {
         return res.status(500).json({message: err});
     }
 });
-// router.get('/userById',[users_Mid.GetUserById], (req, res) => {
-//     if(req.success){
-//         res.status(200).json({msg:"ok",data:req.userById});
-//     } else {
-//         return res.status(500).json({message: err});
-//     }
-// });
-// router.delete('/users',[users_Mid.DeleteUsers], (req, res) => {
-//     if(req.success){
-//         res.status(200).json({msg:"ok"});
-//     } else {
-//         return res.status(500).json({message: err});
-//     }
-// });
+router.delete('/measures',[measures_Mid.DeleteMeasures], (req, res) => {
+    if(req.success){
+        res.status(200).json({msg:"ok"});
+    } else {
+        return res.status(500).json({message: err});
+    }
+});
