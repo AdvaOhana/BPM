@@ -12,7 +12,12 @@ app.use(express.static(path.join(__dirname, "public")));
 
 let db_M = require('./database');
 global.db_pool = db_M.pool;
-//
+
+app.use(express.static(path.join(__dirname, "View")));
+app.get("/", (req, res) => {
+    res.status(200).sendFile(path.join(__dirname, "View/home.html"));
+})
+
 const measures_R=require('./Routers/measures_R');
 app.use('/',measures_R);
 

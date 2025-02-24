@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="bpm.css">
+    <script src="bpm.js" defer></script>
+</head>
+<body>
+<div class="sidenav">
+    <div class="logo">
+        <i class="fas fa-heartbeat"></i> <span>BPM </span>
+    </div>
+    <ul>
+        <li>
+            <a href="home.html" class="active">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a href="addMeasures.html">
+                <i class="fas fa-plus-circle"></i>
+                <span>Add Measures</span>
+            </a>
+        </li>
+        <li>
+            <a href="historyMeasures.html">
+                <i class="fas fa-history"></i>
+                <span>History Measures</span>
+            </a>
+        </li>
+        <li>
+            <a href="allUsers.html">
+                <i class="fas fa-users"></i>
+                <span>All Patients</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="main-content">
+    <header>
+        <h1><i class="fas fa-heartbeat"></i> BPM - <span>Blood Pressure Measurement</span></h1>
+    </header>
+    <div class="content">
+        <div class="dashboard">
+            <div class="card glossy">
+                <h2>Total Patients</h2>
+                <div id="total-patients" class="card-value"></div>
+                <div class="card-footer">
+                    <div class="trend">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card glossy">
+                <h2>Total Measurements</h2>
+                <div id="total-measure" class="card-value"></div>
+                <div class="card-footer">
+                    <div class="trend">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
