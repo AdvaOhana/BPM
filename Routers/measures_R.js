@@ -33,13 +33,13 @@ router.get('/measuresAvg',[measures_Mid.GetMeasuresAvg,measures_Mid.GetMeasuresB
         return res.status(500).json({message: err});
     }
 });
-// router.get('/measuresByMonth',[measures_Mid.AvgMeasuresByMonth, users_Mid.GetUsers], (req, res) => {
-//     if(req.success){
-//         res.status(200).json({msg:"ok",data:req.AvgMeasuresByMonth});
-//     } else {
-//         return res.status(500).json({message: err});
-//     }
-// });
+router.get('/measuresByMonth',[users_Mid.GetUsers, measures_Mid.AvgMeasuresByMonth], (req, res) => {
+    if(req.success){
+        res.status(200).json({msg:"ok",data:req.AvgMeasuresByMonth});
+    } else {
+        return res.status(500).json({message: err});
+    }
+});
 router.put('/measures',[measures_Mid.UpdateMeasures],  (req, res) => {
     if(req.success){
         res.status(200).json({msg:"ok"});

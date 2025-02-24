@@ -24,6 +24,7 @@ async function GetUsers(req,res,next){
     let rows=[];
     try {
         [rows] = await promisePool.query(Query);
+        if (!rows.length) throw new Error('No rows found.');
         req.success=true;
         req.all_users=rows;
     } catch (err) {
@@ -66,13 +67,14 @@ async function DeleteUsers(req,res,next){
     next();
 }
 async function GetUserById(req,res,next){
-    let idx             = req.body.idx;
+    let idx             = Number(req.body.idx);
     let Query = `SELECT * FROM users `;
     Query += ` WHERE id = ${idx} `;
     const promisePool = db_pool.promise();
     let rows=[];
     try {
         [rows] = await promisePool.query(Query);
+        if (!rows.length) throw new Error('No rows found.');
         req.success=true;
         req.userById=rows;
     } catch (err) {

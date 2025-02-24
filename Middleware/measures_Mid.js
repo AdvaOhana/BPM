@@ -35,6 +35,7 @@ async function GetMeasures(req,res,next){
     let rows=[];
     try {
         [rows] = await promisePool.query(Query);
+        if (!rows.length) throw new Error('No rows found.');
         req.success=true;
         req.all_measures=rows;
     } catch (err) {
@@ -106,6 +107,7 @@ async function GetMeasuresByUId(req,res,next){
     let rows=[];
     try {
         [rows] = await promisePool.query(Query);
+        if (!rows.length) throw new Error('No rows found.');
         req.success=true;
         req.measuresByUId=rows;
     } catch (err) {
@@ -143,34 +145,72 @@ async function GetMeasuresAvg(req,res,next){
     next();
 }
 async function CriticalMeasures(req,res,next){
-    let measuresAvg= req.measuresAvg;
-    let measuresByUId= req.measuresByUId;
+   try {
+       let measuresAvg = req.measuresAvg;
+       let measuresByUId = req.measuresByUId;
 
-
-    measuresByUId.forEach((measure)=>{
-        measure.critical=false;
-
-    if (!measure.sysCriticalCnt) measure.sysCriticalCnt = 0;
-    if (!measure.diaCriticalCnt) measure.diaCriticalCnt = 0;
-    if (!measure.pulseCriticalCnt) measure.pulseCriticalCnt = 0;
-
-    if (measure.sys_high > measuresAvg[0].sysAvg * 1.2 ){
-        measure.critical=true;
-        measure.sysCriticalCnt++;
+       measuresByUId.forEach((measure) => {
+           measure.critical = false;
+           if (measure.sys_high > measuresAvg[0].sysAvg * 1.2||measure.dia_low > measuresAvg[0].diaAvg * 1.2||measure.pulse > measuresAvg[0].pulseAvg * 1.2) {
+               measure.critical = true;
+           }
+       })
+       req.criticalData = measuresByUId;
+   } catch (err) {
+    req.success=false;
+    console.log(err);
     }
-    if (measure.dia_low > measuresAvg[0].diaAvg * 1.2){
-        measure.critical=true;
-        measure.diaCriticalCnt++;
-    }
-    if (measure.pulse > measuresAvg[0].pulseAvg * 1.2){
-        measure.critical=true;
-        measure.pulseCriticalCnt++;
-    }
-    })
-    req.criticalData=measuresByUId;
     next();
 }
+async function AvgMeasuresByMonth(req,res,next){
+    let month=Number(req.body.month);
+    let allUsers= req.all_users;
 
+    if (month>12 || month<1 || month === undefined)throw new Error('Month is not valid, please check again.');
+
+    let Query = `SELECT user_id,avg(sys_high) AS sysAvg, avg(dia_low) AS diaAvg,avg(pulse) AS pulseAvg FROM measures `;
+    Query += ` WHERE MONTH(date)= ${month} `;
+    Query += ` GROUP BY user_id `;
+
+    let Query2= `select * from measures where MONTH(date)= ${month} `;
+
+    const promisePool = db_pool.promise();
+    let rows=[];
+    let rows2=[];
+    try {
+        [rows] = await promisePool.query(Query);
+        [rows2] = await promisePool.query(Query2);
+
+        if (!rows.length || !rows2.length) throw new Error('No rows found.');
+
+        rows.forEach(avg =>{
+            rows2.forEach(measure =>{
+                if (avg.user_id === measure.user_id){
+                    if (measure.sys_high > avg.sysAvg * 1.2) {
+                        avg.sysCnt = avg.sysCnt ? avg.sysCnt++ : 1;
+                    }
+                    if (measure.dia_low > avg.diaAvg * 1.2) {
+                        avg.diaCnt = avg.diaCnt ? avg.diaCnt++ : 1;
+                    }
+                    if (measure.pulse > avg.pulseAvg * 1.2) {
+                        avg.pulseCnt = avg.pulseCnt ? avg.pulseCnt++ : 1;
+                    }
+                }
+            })
+            allUsers.forEach(user=>{
+                if (avg.user_id === user.id){
+                    avg.userName= user.full_name;
+                }
+            })
+        })
+        req.success=true;
+        req.AvgMeasuresByMonth=rows;
+    } catch (err) {
+        req.success=false;
+        console.log(err);
+    }
+    next();
+}
 module.exports={
     AddMeasures,
     GetMeasures,
@@ -179,4 +219,5 @@ module.exports={
     GetMeasuresByUId,
     GetMeasuresAvg,
     CriticalMeasures,
+    AvgMeasuresByMonth
 };
