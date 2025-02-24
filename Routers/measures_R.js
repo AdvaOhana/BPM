@@ -3,7 +3,7 @@ const router = express.Router();
 module.exports = router;
 
 const measures_Mid =require('../Middleware/measures_Mid');
-const users_Mid = require("../Middleware/users_Mid");
+const users_Mid =require('../Middleware/users_Mid');
 
 router.post('/measures', [measures_Mid.AddMeasures],(req, res) => {
     if(req.success){
@@ -33,6 +33,13 @@ router.get('/measuresAvg',[measures_Mid.GetMeasuresAvg,measures_Mid.GetMeasuresB
         return res.status(500).json({message: err});
     }
 });
+// router.get('/measuresByMonth',[measures_Mid.AvgMeasuresByMonth, users_Mid.GetUsers], (req, res) => {
+//     if(req.success){
+//         res.status(200).json({msg:"ok",data:req.AvgMeasuresByMonth});
+//     } else {
+//         return res.status(500).json({message: err});
+//     }
+// });
 router.put('/measures',[measures_Mid.UpdateMeasures],  (req, res) => {
     if(req.success){
         res.status(200).json({msg:"ok"});
