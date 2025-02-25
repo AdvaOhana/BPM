@@ -2,41 +2,54 @@
      let url= "/users";
      let res = await fetch(url);
      let replay = await res.json();
-    all_users= replay.data;
+     let users= replay.data;
+    let s = "";
+    for (let user_id in users) {
+        s += `<option value="${users[user_id].id}">${users[user_id].full_name}</option>`;
+    }
+    document.getElementById("selectPatients").innerHTML = s;
+
  }
 async function getMeasures(){
     let url= "/measures";
     let res = await fetch(url);
     let replay = await res.json();
-    all_measures= replay.data;
  }
+async function AddMeasures() {
+    let user_id= document.getElementById("selectPatients").value;
+    let systolic = document.getElementById("systolic").value;
+    let diastolic = document.getElementById("diastolic").value;
+    let pulse = document.getElementById("pulse").value;
+
+    if (!systolic || !diastolic || !pulse) {
+        alert('Please fill in all measurement fields');
+        return;
+    }
+         let url= "/measures";
+         let res = await fetch(url,{
+            method:'POST',
+            headers:{
+                "Content-Type": 'application/json'
+            },
+            body:JSON.stringify({
+                user_id: user_id,
+                sys_high: systolic,
+                dia_low: diastolic,
+                pulse: pulse
+            }),
+        });
+        let data = await res.json();
+        if (data.message){
+            alert(data.message);
+        } else {
+        alert("Measurement saved successfully!");
+}
+}
 async function BuildPage(){
     await getUsers();
     await getMeasures();
     document.getElementById("total-measure").innerHTML=all_measures.length;
     document.getElementById("total-patients").innerHTML=all_users.length;
 }
-BuildPage();
 
 
-
-
-
-
- document.addEventListener('DOMContentLoaded', function() {
-    const rows = document.querySelectorAll('tbody tr');
-    rows.forEach(row => {
-    row.addEventListener('mouseenter', () => {
-    row.style.transform = 'scale(1.01)';
-});
-    row.addEventListener('mouseleave', () => {
-    row.style.transform = 'scale(1)';
-});
-});
-    setInterval(() => {
-    const heartRateValue = document.querySelector('.card:nth-child(3) .card-value');
-    const currentValue = parseInt(heartRateValue.textContent);
-    const newValue = currentValue + Math.floor(Math.random() * 3) - 1;
-    heartRateValue.innerHTML = `${newValue} <span>bpm</span>`;
-}, 3000);
-});

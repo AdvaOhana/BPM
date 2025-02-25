@@ -17,6 +17,12 @@ app.use(express.static(path.join(__dirname, "View")));
 app.get("/", (req, res) => {
     res.status(200).sendFile(path.join(__dirname, "View/home.html"));
 })
+app.get("/patients", (req, res) => {
+    res.status(200).sendFile(path.join(__dirname, "View/allusers.html"));
+})
+app.get("/measures", (req, res) => {
+    res.status(200).sendFile(path.join(__dirname, "View/addMeasures.html"));
+})
 
 const measures_R=require('./Routers/measures_R');
 app.use('/',measures_R);

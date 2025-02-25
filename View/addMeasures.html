@@ -2,9 +2,44 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BPM App - Blood Pressure Measurement</title>
+<!--    <link rel="stylesheet" href="bpm.css">-->
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">-->
+    <script src="bpm.js"></script></head>
+<body onload="getUsers()">
+<div>
+    <label for="selectPatients">Select Patient</label>
+    <select id="selectPatients"></select>
+</div>
+<div>
+        <div>
+            <label for="systolic">Systolic</label>
+            <div>
+                <input type="number" id="systolic" name="systolic" placeholder="Systolic">
+            </div>
+        </div>
+        <div>
+            <label for="diastolic">Diastolic</label>
+            <div>
+                <input type="number" id="diastolic" name="diastolic" placeholder="Diastolic">
+            </div>
+        </div>
+        <div>
+            <label for="pulse">Pulse</label>
+            <div>
+                <input type="number" id="pulse" name="pulse" placeholder="Pulse">
+            </div>
+        </div>
+        <div>
+            <label for="date">Date</label>
+            <div>
+                <input type="date" id="date" name="date">
+            </div>
+        </div>
+    <button type="submit" onclick="AddMeasures()">
+        <i></i> Save Measurement
+    </button>
+</div>
 </body>
 </html>
