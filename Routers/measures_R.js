@@ -19,7 +19,7 @@ router.get('/measures',[measures_Mid.GetMeasures], (req, res) => {
         return res.status(500).json({message: err});
     }
 });
-router.get('/measuresByUId',[measures_Mid.GetMeasuresByUId], (req, res) => {
+router.post('/measuresByUId',[measures_Mid.GetMeasuresByUId], (req, res) => {
     if(req.success){
         res.status(200).json({msg:"ok",data:req.measuresByUId});
     } else {

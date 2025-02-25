@@ -2,9 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>BPM App - Blood Pressure Measurement</title>
+    <script src="bpm.js" defer></script>
 </head>
-<body>
-
+<body onload="getUsers()">
+<div>
+    <label for="selectPatients">Select Patient</label>
+    <select id="selectPatients"></select>
+    <label for="startDate">Select Start Date : </label>
+    <input type="date" id="startDate" name="date">
+    <label for="endDate">Select End Date : </label>
+    <input type="date" id="endDate" name="date">
+    <button onclick="CreateMeasuresTable()">Search</button>
+</div>
+<div >
+    <table>
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Date</th>
+            <th>Systolic</th>
+            <th>Diastolic</th>
+            <th>Pulse</th>
+        </tr>
+        </thead>
+        <tbody id="MeasuresTable"></tbody>
+    </table>
+</div>
 </body>
 </html>
