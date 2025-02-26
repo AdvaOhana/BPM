@@ -2,9 +2,63 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BPM App - Blood Pressure Measurement</title>
+    <link rel="stylesheet" href="bpm.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="bpm.js"></script>
 </head>
 <body>
-
+<div class="sidenav">
+    <div class="logo">
+        <i class="fas fa-heartbeat"></i> <span>BPM </span>
+    </div>
+    <ul>
+        <li>
+            <a href="home.html" class="active">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a href="addMeasures.html">
+                <i class="fas fa-plus-circle"></i>
+                <span>Add Measures</span>
+            </a>
+        </li>
+        <li>
+            <a href="historyMeasures.html">
+                <i class="fas fa-history"></i>
+                <span>History Measures</span>
+            </a>
+        </li>
+        <li>
+            <a href="allUsers.html">
+                <i class="fas fa-users"></i>
+                <span>All Patients</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div>
+    <label for="month">Select Month</label>
+    <input type="text" id="month" >
+    <button onclick="AvgMeasuresByMonth()">Search</button>
+</div>
+<div class="patient-list">
+    <table>
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Patient Name</th>
+            <th>Systolic Avg/ Critical</th>
+            <th>Diastolic Avg/ Critical</th>
+            <th>Pulse Avg/ Critical</th>
+            <th>Total Critical</th>
+        </tr>
+        </thead>
+        <tbody id="avgMeasures"></tbody>
+    </table>
+</div>
 </body>
 </html>

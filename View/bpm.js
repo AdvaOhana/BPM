@@ -13,6 +13,7 @@ async function getMeasures(){
     let url= "/measures";
     let res = await fetch(url);
     let replay = await res.json();
+    return replay;
  }
 async function AddMeasures() {
     let user_id= document.getElementById("selectPatients").value;
@@ -67,16 +68,16 @@ async function CreateMeasuresTable(){
 
     for(let idx in data){
         let measure = data[idx];
-        row += "<tr>";
-        row += `<td>${Number(idx)+1}</td>`;
-        row += `<td>${new Date(measure.date).toLocaleDateString('he-IL')}</td>`;
-        row += `<td>${measure.sys_high}</td>`;
-        row += `<td>${measure.dia_low}</td>`;
-        row += `<td>${measure.pulse}</td>`;
-        row += `<td><button onclick="UpdateMeasuresForm(${measure.id})">Edit</button></td>`;
-        row += `<td><button onclick="DeleteMeasures(${measure.id})">Delete</button></td>`;
-        row += "</tr>";
-    }
+            row += "<tr>";
+            row += `<td>${Number(idx)+1}</td>`;
+            row += `<td>${new Date(measure.date).toLocaleDateString('he-IL')}</td>`;
+            row += `<td>${measure.sys_high}</td>`;
+            row += `<td>${measure.dia_low}</td>`;
+            row += `<td>${measure.pulse}</td>`;
+            row += `<td><button onclick="UpdateMeasuresForm(${measure.id})">Edit</button></td>`;
+            row += `<td><button onclick="DeleteMeasures(${measure.id})">Delete</button></td>`;
+            row += "</tr>";
+        }
     document.getElementById("MeasuresTable").innerHTML = row;
 }
 function UpdateMeasuresForm(idx){
@@ -159,6 +160,37 @@ async function DeleteMeasures(idx){
         setTimeout(()=>{alert("Measurement deleted successfully!");},500)
     }
 }
+
+async function AvgMeasuresByMonth(){
+    let month= document.getElementById("month").value;
+
+    let url= "/measuresByMonth";
+    let res= await fetch(url,{
+        method:'POST',
+        headers:{
+            "Content-Type": 'application/json'
+        },
+        body:JSON.stringify({month:month})
+    })
+    let replay= await res.json()
+    let data= replay.data
+
+    let row= ""
+    for(let idx in data){
+        let measure = data[idx];
+        row += "<tr>";
+        row += `<td>${Number(idx)+1}</td>`;
+        row += `<td>${measure.userName}</td>`;
+        row += `<td>${measure.sysAvg}/ ${measure.sysCnt}</td>`;
+        row += `<td>${measure.diaAvg}/ ${measure.diaCnt}</td>`;
+        row += `<td>${measure.pulseAvg}/ ${measure.pulseCnt}</td>`;
+        row += `<td>${measure.pulseCnt+measure.diaCnt+measure.sysCnt}</td>`;
+        row += "</tr>";
+    }
+    document.getElementById("avgMeasures").innerHTML = row;
+
+}
+
 async function BuildPage(){
    const measures= await getMeasures();
    const users= await getUsers();

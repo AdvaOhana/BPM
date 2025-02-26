@@ -33,7 +33,7 @@ router.get('/measuresAvg',[measures_Mid.GetMeasuresAvg,measures_Mid.GetMeasuresB
         return res.status(500).json({message: err});
     }
 });
-router.get('/measuresByMonth',[users_Mid.GetUsers, measures_Mid.AvgMeasuresByMonth], (req, res) => {
+router.post('/measuresByMonth',[users_Mid.GetUsers, measures_Mid.AvgMeasuresByMonth], (req, res) => {
     if(req.success){
         res.status(200).json({msg:"ok",data:req.AvgMeasuresByMonth});
     } else {
