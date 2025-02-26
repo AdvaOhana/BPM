@@ -74,6 +74,7 @@ async function CreateMeasuresTable(){
         row += `<td>${measure.dia_low}</td>`;
         row += `<td>${measure.pulse}</td>`;
         row += `<td><button onclick="UpdateMeasuresForm(${measure.id})">Edit</button></td>`;
+        row += `<td><button onclick="DeleteMeasures(${measure.id})">Delete</button></td>`;
         row += "</tr>";
     }
     document.getElementById("MeasuresTable").innerHTML = row;
@@ -139,6 +140,23 @@ async function UpdateMeasures(idx){
         setTimeout(()=>{alert(data.message);},500)
     } else {
         setTimeout(()=>{alert("Measurement updated successfully!");},500)
+    }
+}
+async function DeleteMeasures(idx){
+    let url= "/measures";
+    let res= await fetch(url,{
+        method:'DELETE',
+        headers:{
+            "Content-Type": 'application/json'
+        },
+        body:JSON.stringify({idx:idx})
+    })
+    let data = await res.json();
+    await CreateMeasuresTable();
+    if (data.message){
+        setTimeout(()=>{alert(data.message);},500)
+    } else {
+        setTimeout(()=>{alert("Measurement deleted successfully!");},500)
     }
 }
 async function BuildPage(){
