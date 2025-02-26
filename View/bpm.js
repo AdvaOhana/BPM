@@ -73,9 +73,73 @@ async function CreateMeasuresTable(){
         row += `<td>${measure.sys_high}</td>`;
         row += `<td>${measure.dia_low}</td>`;
         row += `<td>${measure.pulse}</td>`;
+        row += `<td><button onclick="UpdateMeasuresForm(${measure.id})">Edit</button></td>`;
         row += "</tr>";
     }
     document.getElementById("MeasuresTable").innerHTML = row;
+}
+function UpdateMeasuresForm(idx){
+const updateForm = `<div>
+        <div>
+            <label for="systolic">Systolic</label>
+            <div>
+                <input type="number" id="systolic" name="systolic" placeholder="Systolic">
+            </div>
+        </div>
+        <div>
+            <label for="diastolic">Diastolic</label>
+            <div>
+                <input type="number" id="diastolic" name="diastolic" placeholder="Diastolic">
+            </div>
+        </div>
+        <div>
+            <label for="pulse">Pulse</label>
+            <div>
+                <input type="number" id="pulse" name="pulse" placeholder="Pulse">
+            </div>
+        </div>
+        <div>
+            <label for="date">Date</label>
+            <div>
+                <input type="date" id="date" name="date">
+            </div>
+        </div>
+    <button type="submit" onclick="UpdateMeasures(${idx})">
+        <i></i> Save Measurement
+    </button>
+</div>`
+    document.getElementById("updateForm").innerHTML = updateForm;
+}
+async function UpdateMeasures(idx){
+    let systolic = document.getElementById("systolic").value;
+    let diastolic = document.getElementById("diastolic").value;
+    let pulse = document.getElementById("pulse").value;
+
+    if (!systolic || !diastolic || !pulse) {
+        alert('Please fill in all measurement fields');
+        return;
+    }
+
+    let url= `/measures`;
+    let res = await fetch(url,{
+        method:'PUT',
+        headers:{
+            "Content-Type": 'application/json'
+        },
+        body:JSON.stringify({
+            idx: idx,
+            sys_high: systolic,
+            dia_low: diastolic,
+            pulse: pulse
+        }),
+    })
+    let data = await res.json();
+    await CreateMeasuresTable()
+    if (data.message){
+        setTimeout(()=>{alert(data.message);},500)
+    } else {
+        setTimeout(()=>{alert("Measurement updated successfully!");},500)
+    }
 }
 async function BuildPage(){
    const measures= await getMeasures();
