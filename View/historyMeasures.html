@@ -3,19 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <title>BPM App - Blood Pressure Measurement</title>
+    <link rel="stylesheet" href="bpm.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="bpm.js" defer></script>
 </head>
 <body onload="getUsers()">
-<div>
-    <label for="selectPatients">Select Patient</label>
-    <select id="selectPatients"></select>
-    <label for="startDate">Select Start Date : </label>
-    <input type="date" id="startDate" name="date">
+<div class="sidenav">
+    <div class="logo">
+        <i class="fas fa-heartbeat"></i>
+        <span>BPM App</span>
+    </div>
+    <ul>
+        <li>
+            <a href="home.html" class="active">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a href="addMeasures.html">
+                <i class="fas fa-plus-circle"></i>
+                <span>Add Measures</span>
+            </a>
+        </li>
+        <li>
+            <a href="historyMeasures.html">
+                <i class="fas fa-history"></i>
+                <span>History Measures</span>
+            </a>
+        </li>
+        <li>
+            <a href="allUsers.html">
+                <i class="fas fa-users"></i>
+                <span>All Patients</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<div class="form-container glossy">
+    <div class="form-group">
+        <label for="selectPatients">Select Patient</label>
+        <div class="input-field">
+             <select id="selectPatients"></select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="startDate">Select Start Date : </label>
+        <div class="input-field">
+        <input type="date" id="startDate" name="date">
+        </div>
+    </div>
+    <div class="form-group">
     <label for="endDate">Select End Date : </label>
-    <input type="date" id="endDate" name="date">
+        <div class="input-field">
+        <input type="date" id="endDate" name="date">
+        </div>
+    </div>
     <button onclick="CreateMeasuresTable()">Search</button>
 </div>
-<div >
+<div class="table-container glossy" >
     <table>
         <thead>
         <tr>

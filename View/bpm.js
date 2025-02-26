@@ -3,17 +3,28 @@
      let res = await fetch(url);
      let replay = await res.json();
      let users= replay.data;
-    let s = "";
+    let s = '<option value="">Select a patient</option>';
     for (let user_id in users) {
-        s += `<option value="${users[user_id].id}">${users[user_id].full_name}</option>`;
+        s += `<option value="${users[user_id].id}" >${users[user_id].full_name}</option>`;
     }
     document.getElementById("selectPatients").innerHTML = s;
- }
+}
+function showMetricsForm() {
+    const metricsForm = document.getElementById("metricsForm");
+    if (document.getElementById("selectPatients").value) {
+        metricsForm.style.display = "block"; // הצגת הטופס
+        metricsForm.classList.add("active");
+    } else {
+        metricsForm.style.display = "none"; // הסתרת הטופס
+        metricsForm.classList.remove("active");
+    }
+}
 async function getMeasures(){
     let url= "/measures";
     let res = await fetch(url);
     let replay = await res.json();
-    return replay;
+    let data=replay.data;
+    return data;
  }
 async function AddMeasures() {
     let user_id= document.getElementById("selectPatients").value;
@@ -82,27 +93,27 @@ async function CreateMeasuresTable(){
 }
 function UpdateMeasuresForm(idx){
 const updateForm = `<div>
-        <div>
+        <div class="form-group">
             <label for="systolic">Systolic</label>
-            <div>
+            <div class="input-field">
                 <input type="number" id="systolic" name="systolic" placeholder="Systolic">
             </div>
         </div>
-        <div>
+        <div class="form-group">
             <label for="diastolic">Diastolic</label>
-            <div>
+            <div class="input-field">
                 <input type="number" id="diastolic" name="diastolic" placeholder="Diastolic">
             </div>
         </div>
-        <div>
+        <div class="form-group">
             <label for="pulse">Pulse</label>
-            <div>
+            <div class="input-field">
                 <input type="number" id="pulse" name="pulse" placeholder="Pulse">
             </div>
         </div>
-        <div>
+        <div class="form-group">
             <label for="date">Date</label>
-            <div>
+            <div class="input-field">
                 <input type="date" id="date" name="date">
             </div>
         </div>
@@ -192,8 +203,8 @@ async function AvgMeasuresByMonth(){
 }
 
 async function BuildPage(){
-   const measures= await getMeasures();
-   const users= await getUsers();
+   await getMeasures();
+   await getUsers();
     document.getElementById("total-measure").innerHTML=measures.length;
     document.getElementById("total-patients").innerHTML=users.length;
 }

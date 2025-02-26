@@ -6,7 +6,7 @@
     <title>BPM App - Blood Pressure Measurement</title>
     <link rel="stylesheet" href="bpm.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="bpm.js"></script>
+    <script src="bpm.js" defer></script>
 </head>
 <body>
 <div class="sidenav">
@@ -40,12 +40,14 @@
         </li>
     </ul>
 </div>
-<div>
+<div class="form-group">
     <label for="month">Select Month</label>
+    <div class="input-field">
     <input type="text" id="month" >
+    </div>
     <button onclick="AvgMeasuresByMonth()">Search</button>
 </div>
-<div class="patient-list">
+<div class="table-container glossy">
     <table>
         <thead>
         <tr>
