@@ -20,7 +20,7 @@ app.get("/", (req, res) => {
 app.get("/patients", (req, res) => {
     res.status(200).sendFile(path.join(__dirname, "View/allusers.html"));
 })
-app.get("/measures", (req, res) => {
+app.get("/measure", (req, res) => {
     res.status(200).sendFile(path.join(__dirname, "View/addMeasures.html"));
 })
 

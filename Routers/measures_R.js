@@ -19,14 +19,7 @@ router.get('/measures',[measures_Mid.GetMeasures], (req, res) => {
         return res.status(500).json({message: err});
     }
 });
-router.post('/measuresByUId',[measures_Mid.GetMeasuresByUId], (req, res) => {
-    if(req.success){
-        res.status(200).json({msg:"ok",data:req.measuresByUId});
-    } else {
-        return res.status(500).json({message: err});
-    }
-});
-router.get('/measuresAvg',[measures_Mid.GetMeasuresAvg,measures_Mid.GetMeasuresByUId,measures_Mid.CriticalMeasures], (req, res) => {
+router.post('/measuresByUId',[measures_Mid.GetMeasuresAvg,measures_Mid.GetMeasuresByUId,measures_Mid.CriticalMeasures], (req, res) => {
     if(req.success){
         res.status(200).json({msg:"ok",data:req.criticalData});
     } else {

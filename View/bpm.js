@@ -3,11 +3,16 @@
      let res = await fetch(url);
      let replay = await res.json();
      let users= replay.data;
+     const select= document.getElementById("selectPatients")
+    if (select){
     let s = '<option value="">Select a patient</option>';
     for (let user_id in users) {
         s += `<option value="${users[user_id].id}" >${users[user_id].full_name}</option>`;
     }
-    document.getElementById("selectPatients").innerHTML = s;
+    select.innerHTML = s;
+
+    }
+    return users
 }
 function showMetricsForm() {
     const metricsForm = document.getElementById("metricsForm");
@@ -76,10 +81,9 @@ async function CreateMeasuresTable(){
     let replay = await res.json();
     let data = replay.data;
     let row = "";
-
     for(let idx in data){
         let measure = data[idx];
-            row += "<tr>";
+            row += `<tr class="${measure.critical?'crit':''}">`;
             row += `<td>${Number(idx)+1}</td>`;
             row += `<td>${new Date(measure.date).toLocaleDateString('he-IL')}</td>`;
             row += `<td>${measure.sys_high}</td>`;
@@ -189,7 +193,7 @@ async function AvgMeasuresByMonth(){
     let row= ""
     for(let idx in data){
         let measure = data[idx];
-        row += "<tr>";
+        row += `<tr>`;
         row += `<td>${Number(idx)+1}</td>`;
         row += `<td>${measure.userName}</td>`;
         row += `<td>${measure.sysAvg}/ ${measure.sysCnt}</td>`;
@@ -203,8 +207,8 @@ async function AvgMeasuresByMonth(){
 }
 
 async function BuildPage(){
-   await getMeasures();
-   await getUsers();
+   const users= await getUsers();
+   const measures= await getMeasures();
     document.getElementById("total-measure").innerHTML=measures.length;
     document.getElementById("total-patients").innerHTML=users.length;
 }
