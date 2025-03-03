@@ -40,14 +40,26 @@
         </li>
     </ul>
 </div>
-<div class="form-group">
-    <label for="month">Select Month</label>
-    <div class="input-field">
-    <input type="text" id="month" >
+<div class="main-content">
+    <h1 class="page-title">All Patients Average Measures</h1>
+    <div class="content">
+<div class="form-container-measures glossy">
+    <div class="form-group">
+        <label for="month">Select Month :</label>
+        <div class="input-field">
+        <input type="number" min="1" max="12" id="month" >
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="year">Select Year :</label>
+        <div class="input-field">
+        <input type="number" min="0" id="year" >
+        </div>
     </div>
     <button onclick="AvgMeasuresByMonth()">Search</button>
-</div>
+    </div>
 <div class="table-container glossy">
+    <div class="table-wrapper">
     <table>
         <thead>
         <tr>
@@ -61,6 +73,10 @@
         </thead>
         <tbody id="avgMeasures"></tbody>
     </table>
+    </div>
+</div>
+    </div>
+</div>
 </div>
 </body>
 </html>
