@@ -57,9 +57,7 @@ async function AddMeasures() {
             }),
         });
         let data = await res.json();
-        if (data.message){
-            alert(data.message);
-        } else {
+        if (data.msg){
         alert("Measurement saved successfully!");
         }
 }
@@ -123,7 +121,7 @@ function UpdateMeasuresForm(idx){
             </div>
         </div>
     <button type="submit" onclick="UpdateMeasures(${idx}) ">
-        <i></i> Save Measurement
+         Save Measurement
     </button>
 </div>`
     document.getElementById("updateForm").innerHTML = updateForm;
@@ -132,8 +130,10 @@ async function UpdateMeasures(idx){
     let systolic = document.getElementById("systolic").value;
     let diastolic = document.getElementById("diastolic").value;
     let pulse = document.getElementById("pulse").value;
+    let date = document.getElementById("date").value;
 
-    if (!systolic || !diastolic || !pulse) {
+
+    if (!systolic || !diastolic || !pulse || !date) {
         alert('Please fill in all measurement fields');
         return;
     }
@@ -148,14 +148,13 @@ async function UpdateMeasures(idx){
             idx: idx,
             sys_high: systolic,
             dia_low: diastolic,
-            pulse: pulse
+            pulse: pulse,
+            date:date
         }),
     })
     let data = await res.json();
     await CreateMeasuresTable()
-    if (data.message){
-        setTimeout(()=>{alert(data.message);},500)
-    } else {
+    if (data.msg){
         setTimeout(()=>{alert("Measurement updated successfully!");},500)
     }
 }

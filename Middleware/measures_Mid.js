@@ -47,7 +47,7 @@ async function GetMeasures(req,res,next){
 }
 async function UpdateMeasures(req,res,next){
     let idx             = parseInt(req.body.idx);
-    let date= new Date().toISOString().split("T")[0];
+    let date               = req.body.date;
     let sys_high= Number(req.body.sys_high);
     let dia_low= Number(req.body.dia_low);
     let pulse= Number(req.body.pulse);
@@ -56,6 +56,8 @@ async function UpdateMeasures(req,res,next){
     if (sys_high === undefined)throw new Error('Must enter a systolic value.');
     if (dia_low === undefined)throw new Error('Must enter a diastolic value.');
     if (pulse === undefined)throw new Error('Must enter a pulse value.');
+    if (date === undefined)throw new Error('Date is not valid.');
+
 
     let Query = `UPDATE measures SET `;
     Query += ` date = '${date}' , `;
