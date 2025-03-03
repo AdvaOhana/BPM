@@ -95,36 +95,68 @@ async function CreateMeasuresTable(){
     document.getElementById("MeasuresTable").innerHTML = row;
 }
 function UpdateMeasuresForm(idx){
-    const updateForm = `<div>
-        <div class="form-group">
-            <label for="systolic">Systolic</label>
-            <div class="input-field">
-                <input type="number" min="0" id="systolic" name="systolic" placeholder="Systolic">
+    const modalOverlay = document.createElement('div');
+    modalOverlay.className = 'modal-overlay';
+    modalOverlay.id = 'modalOverlay';
+
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content glossy';
+
+    modalContent.innerHTML = `
+        <div class="form-container">
+            <h2>Update Measurement</h2>
+            <div class="form-group">
+                <label for="systolic">Systolic</label>
+                <div class="input-field">
+                    <input type="number" min="0" id="systolic" name="systolic" placeholder="Systolic">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="diastolic">Diastolic</label>
+                <div class="input-field">
+                    <input type="number" min="0" id="diastolic" name="diastolic" placeholder="Diastolic">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="pulse">Pulse</label>
+                <div class="input-field">
+                    <input type="number" min="0" id="pulse" name="pulse" placeholder="Pulse">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="date">Date</label>
+                <div class="input-field">
+                    <input type="date" id="date" name="date">
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button type="submit" onclick="UpdateMeasures(${idx})">Save Measurement</button>
+                <button type="button" class="cancel-btn" onclick="closeModal()">Cancel</button>
             </div>
         </div>
-        <div class="form-group">
-            <label for="diastolic">Diastolic</label>
-            <div class="input-field">
-                <input type="number" min="0" id="diastolic" name="diastolic" placeholder="Diastolic">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="pulse">Pulse</label>
-            <div class="input-field">
-                <input type="number" min="0" id="pulse" name="pulse" placeholder="Pulse">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="date">Date</label>
-            <div class="input-field">
-                <input type="date" id="date" name="date">
-            </div>
-        </div>
-    <button type="submit" onclick="UpdateMeasures(${idx}) ">
-         Save Measurement
-    </button>
-</div>`
-    document.getElementById("updateForm").innerHTML = updateForm;
+    `;
+
+    modalOverlay.appendChild(modalContent);
+    document.body.appendChild(modalOverlay);
+
+    modalOverlay.addEventListener('click', function(event) {
+        if (event.target === modalOverlay) {
+            closeModal();
+        }
+    });
+
+    setTimeout(() => {
+        modalOverlay.classList.add('active');
+    }, 10);
+}
+function closeModal() {
+    const modalOverlay = document.getElementById('modalOverlay');
+    if (modalOverlay) {
+        modalOverlay.classList.remove('active');
+        setTimeout(() => {
+            document.body.removeChild(modalOverlay);
+        }, 300);
+    }
 }
 async function UpdateMeasures(idx){
     let systolic = document.getElementById("systolic").value;
@@ -153,6 +185,7 @@ async function UpdateMeasures(idx){
         }),
     })
     let data = await res.json();
+    closeModal();
     await CreateMeasuresTable()
     if (data.msg){
         setTimeout(()=>{alert("Measurement updated successfully!");},500)
