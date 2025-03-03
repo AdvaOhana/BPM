@@ -179,15 +179,25 @@ async function DeleteMeasures(idx){
 
 async function AvgMeasuresByMonth(){
     let month= document.getElementById("month").value;
-
+    let year= document.getElementById("year").value;
+    if (!month|| !year){
+        alert('Please fill in all the fields');
+        return;
+    }
     let url= "/measuresByMonth";
     let res= await fetch(url,{
         method:'POST',
         headers:{
             "Content-Type": 'application/json'
         },
-        body:JSON.stringify({month:month})
+        body:JSON.stringify({
+            month:month,
+            year:year
+        })
     })
+    if (!res.ok){
+        alert("No measurement found in that dates.");
+    }
     let replay= await res.json()
     let data= replay.data
 
@@ -197,10 +207,10 @@ async function AvgMeasuresByMonth(){
         row += `<tr>`;
         row += `<td>${Number(idx)+1}</td>`;
         row += `<td>${measure.userName}</td>`;
-        row += `<td>${measure.sysAvg}/ ${measure.sysCnt}</td>`;
-        row += `<td>${measure.diaAvg}/ ${measure.diaCnt}</td>`;
-        row += `<td>${measure.pulseAvg}/ ${measure.pulseCnt}</td>`;
-        row += `<td>${measure.pulseCnt+measure.diaCnt+measure.sysCnt}</td>`;
+        row += `<td>${measure.sysAvg}/ ${measure.sysCnt||0}</td>`;
+        row += `<td>${measure.diaAvg}/ ${measure.diaCnt||0}</td>`;
+        row += `<td>${measure.pulseAvg}/ ${measure.pulseCnt||0}</td>`;
+        row += `<td>${measure.pulseCnt+measure.diaCnt+measure.sysCnt||0}</td>`;
         row += "</tr>";
     }
     document.getElementById("avgMeasures").innerHTML = row;

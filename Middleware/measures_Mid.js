@@ -1,5 +1,4 @@
 const {isBefore, isSameDay}= require('date-fns');
-const {query} = require("express");
 
 async function AddMeasures(req, res,next) {
     let user_id    = parseInt(req.body.user_id);
