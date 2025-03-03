@@ -17,10 +17,10 @@
 function showMetricsForm() {
     const metricsForm = document.getElementById("metricsForm");
     if (document.getElementById("selectPatients").value) {
-        metricsForm.style.display = "block"; // הצגת הטופס
+        metricsForm.style.display = "block";
         metricsForm.classList.add("active");
     } else {
-        metricsForm.style.display = "none"; // הסתרת הטופס
+        metricsForm.style.display = "none";
         metricsForm.classList.remove("active");
     }
 }
@@ -36,8 +36,9 @@ async function AddMeasures() {
     let systolic = document.getElementById("systolic").value;
     let diastolic = document.getElementById("diastolic").value;
     let pulse = document.getElementById("pulse").value;
+    let date = document.getElementById("date").value;
 
-    if (!systolic || !diastolic || !pulse) {
+    if (!systolic || !diastolic || !pulse || !date) {
         alert('Please fill in all measurement fields');
         return;
     }
@@ -51,7 +52,8 @@ async function AddMeasures() {
                 user_id: user_id,
                 sys_high: systolic,
                 dia_low: diastolic,
-                pulse: pulse
+                pulse: pulse,
+                date:date
             }),
         });
         let data = await res.json();
@@ -65,14 +67,13 @@ async function CreateMeasuresTable(){
     let user_id= document.getElementById("selectPatients").value;
     let startDate= document.getElementById("startDate").value;
     let endDate= document.getElementById("endDate").value;
-
-    let url= "/measuresByUId";
-    let res = await fetch(url,{
-        method:'POST',
-        headers:{
+    let url = "/measuresByUId";
+    let res = await fetch(url, {
+        method: 'POST',
+        headers: {
             "Content-Type": 'application/json'
         },
-        body:JSON.stringify({
+        body: JSON.stringify({
             user_id: user_id,
             startDate: startDate,
             endDate: endDate
@@ -81,38 +82,38 @@ async function CreateMeasuresTable(){
     let replay = await res.json();
     let data = replay.data;
     let row = "";
-    for(let idx in data){
+    for (let idx in data) {
         let measure = data[idx];
-            row += `<tr class="${measure.critical?'crit':''}">`;
-            row += `<td>${Number(idx)+1}</td>`;
-            row += `<td>${new Date(measure.date).toLocaleDateString('he-IL')}</td>`;
-            row += `<td>${measure.sys_high}</td>`;
-            row += `<td>${measure.dia_low}</td>`;
-            row += `<td>${measure.pulse}</td>`;
-            row += `<td><button onclick="UpdateMeasuresForm(${measure.id})">Edit</button></td>`;
-            row += `<td><button onclick="DeleteMeasures(${measure.id})">Delete</button></td>`;
-            row += "</tr>";
-        }
+        row += `<tr class="${measure.critical ? 'crit' : ''}">`;
+        row += `<td>${Number(idx) + 1}</td>`;
+        row += `<td>${new Date(measure.date).toLocaleDateString('he-IL')}</td>`;
+        row += `<td>${measure.sys_high}</td>`;
+        row += `<td>${measure.dia_low}</td>`;
+        row += `<td>${measure.pulse}</td>`;
+        row += `<td><button onclick="UpdateMeasuresForm(${measure.id})">Edit</button></td>`;
+        row += `<td><button onclick="DeleteMeasures(${measure.id})">Delete</button></td>`;
+        row += "</tr>";
+    }
     document.getElementById("MeasuresTable").innerHTML = row;
 }
 function UpdateMeasuresForm(idx){
-const updateForm = `<div>
+    const updateForm = `<div>
         <div class="form-group">
             <label for="systolic">Systolic</label>
             <div class="input-field">
-                <input type="number" id="systolic" name="systolic" placeholder="Systolic">
+                <input type="number" min="0" id="systolic" name="systolic" placeholder="Systolic">
             </div>
         </div>
         <div class="form-group">
             <label for="diastolic">Diastolic</label>
             <div class="input-field">
-                <input type="number" id="diastolic" name="diastolic" placeholder="Diastolic">
+                <input type="number" min="0" id="diastolic" name="diastolic" placeholder="Diastolic">
             </div>
         </div>
         <div class="form-group">
             <label for="pulse">Pulse</label>
             <div class="input-field">
-                <input type="number" id="pulse" name="pulse" placeholder="Pulse">
+                <input type="number" min="0" id="pulse" name="pulse" placeholder="Pulse">
             </div>
         </div>
         <div class="form-group">
@@ -121,7 +122,7 @@ const updateForm = `<div>
                 <input type="date" id="date" name="date">
             </div>
         </div>
-    <button type="submit" onclick="UpdateMeasures(${idx})">
+    <button type="submit" onclick="UpdateMeasures(${idx}) ">
         <i></i> Save Measurement
     </button>
 </div>`

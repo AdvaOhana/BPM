@@ -1,8 +1,9 @@
 const {isBefore, isSameDay}= require('date-fns');
+const {query} = require("express");
 
 async function AddMeasures(req, res,next) {
     let user_id    = parseInt(req.body.user_id);
-    let date=  new Date().toISOString().split("T")[0];
+    let date               = req.body.date;
     let sys_high= Number(req.body.sys_high);
     let dia_low= Number(req.body.dia_low);
     let pulse= Number(req.body.pulse);
@@ -11,6 +12,7 @@ async function AddMeasures(req, res,next) {
     if (sys_high === undefined)throw new Error('Must enter a systolic value.');
     if (dia_low === undefined)throw new Error('Must enter a diastolic value.');
     if (pulse === undefined)throw new Error('Must enter a pulse value.');
+    if (date === undefined)throw new Error('Date is not valid.');
 
     let Query="INSERT INTO `measures` ";
     Query += " ( `user_id`, `date`, `sys_high`, `dia_low`, `pulse`) ";
@@ -151,7 +153,7 @@ async function CriticalMeasures(req,res,next){
 
        measuresByUId.forEach((measure) => {
            measure.critical = false;
-           if (measure.sys_high > measuresAvg[0].sysAvg * 1.2||measure.dia_low > measuresAvg[0].diaAvg * 1.2||measure.pulse > measuresAvg[0].pulseAvg * 1.2) {
+           if (measure.sys_high > measuresAvg[0].sysAvg * 1.2||measure.dia_low > measuresAvg[0].diaAvg * 1.2||measure.pulse > measuresAvg[0].pulseAvg * 1.2 || measure.sys_high < measuresAvg[0].sysAvg * 0.8||measure.dia_low < measuresAvg[0].diaAvg * 0.8||measure.pulse < measuresAvg[0].pulseAvg * 0.8) {
                measure.critical = true;
            }
        })
@@ -164,15 +166,16 @@ async function CriticalMeasures(req,res,next){
 }
 async function AvgMeasuresByMonth(req,res,next){
     let month=Number(req.body.month);
+    let year=Number(req.body.year);
     let allUsers= req.all_users;
 
     if (month>12 || month<1 || month === undefined)throw new Error('Month is not valid, please check again.');
 
     let Query = `SELECT user_id,avg(sys_high) AS sysAvg, avg(dia_low) AS diaAvg,avg(pulse) AS pulseAvg FROM measures `;
-    Query += ` WHERE MONTH(date)= ${month} `;
+    Query += ` WHERE MONTH(date)= ${month} and Year(date) = ${year} `;
     Query += ` GROUP BY user_id `;
 
-    let Query2= `select * from measures where MONTH(date)= ${month} `;
+    let Query2= `select * from measures where MONTH(date)= ${month} and Year(date) = ${year} `;
 
     const promisePool = db_pool.promise();
     let rows=[];
@@ -186,14 +189,14 @@ async function AvgMeasuresByMonth(req,res,next){
         rows.forEach(avg =>{
             rows2.forEach(measure =>{
                 if (avg.user_id === measure.user_id){
-                    if (measure.sys_high > avg.sysAvg * 1.2) {
-                        avg.sysCnt = avg.sysCnt ? avg.sysCnt++ : 1;
+                    if (measure.sys_high > avg.sysAvg * 1.2 || measure.sys_high < avg.sysAvg * 0.8) {
+                        avg.sysCnt = avg.sysCnt ? avg.sysCnt+1 : 1;
                     }
-                    if (measure.dia_low > avg.diaAvg * 1.2) {
-                        avg.diaCnt = avg.diaCnt ? avg.diaCnt++ : 1;
+                    if (measure.dia_low > avg.diaAvg * 1.2 || measure.dia_low < avg.diaAvg * 0.8) {
+                        avg.diaCnt = avg.diaCnt ? avg.diaCnt+1 : 1;
                     }
-                    if (measure.pulse > avg.pulseAvg * 1.2) {
-                        avg.pulseCnt = avg.pulseCnt ? avg.pulseCnt++ : 1;
+                    if (measure.pulse > avg.pulseAvg * 1.2 || measure.pulse < avg.pulseAvg * 0.8) {
+                        avg.pulseCnt = avg.pulseCnt ? avg.pulseCnt+1 : 1;
                     }
                 }
             })
