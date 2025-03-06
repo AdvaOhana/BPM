@@ -242,7 +242,7 @@ async function AvgMeasuresByMonth(){
         row += `<td>${measure.sysAvg}/ ${measure.sysCnt||0}</td>`;
         row += `<td>${measure.diaAvg}/ ${measure.diaCnt||0}</td>`;
         row += `<td>${measure.pulseAvg}/ ${measure.pulseCnt||0}</td>`;
-        row += `<td>${measure.pulseCnt+measure.diaCnt+measure.sysCnt||0}</td>`;
+        row += `<td>${measure.total}</td>`;
         row += "</tr>";
     }
     document.getElementById("avgMeasures").innerHTML = row;

@@ -151,7 +151,6 @@ async function CriticalMeasures(req,res,next){
    try {
        let measuresAvg = req.measuresAvg;
        let measuresByUId = req.measuresByUId;
-
        measuresByUId.forEach((measure) => {
            measure.critical = false;
            if (measure.sys_high > measuresAvg[0].sysAvg * 1.2||measure.dia_low > measuresAvg[0].diaAvg * 1.2||measure.pulse > measuresAvg[0].pulseAvg * 1.2 || measure.sys_high < measuresAvg[0].sysAvg * 0.8||measure.dia_low < measuresAvg[0].diaAvg * 0.8||measure.pulse < measuresAvg[0].pulseAvg * 0.8) {
@@ -188,19 +187,24 @@ async function AvgMeasuresByMonth(req,res,next){
         if (!rows.length || !rows2.length) throw new Error('No rows found.');
 
         rows.forEach(avg =>{
+            let total=0;
             rows2.forEach(measure =>{
                 if (avg.user_id === measure.user_id){
                     if (measure.sys_high > avg.sysAvg * 1.2 || measure.sys_high < avg.sysAvg * 0.8) {
                         avg.sysCnt = avg.sysCnt ? avg.sysCnt+1 : 1;
+                        total++;
                     }
                     if (measure.dia_low > avg.diaAvg * 1.2 || measure.dia_low < avg.diaAvg * 0.8) {
                         avg.diaCnt = avg.diaCnt ? avg.diaCnt+1 : 1;
+                        total++;
                     }
                     if (measure.pulse > avg.pulseAvg * 1.2 || measure.pulse < avg.pulseAvg * 0.8) {
                         avg.pulseCnt = avg.pulseCnt ? avg.pulseCnt+1 : 1;
+                        total++;
                     }
                 }
             })
+            avg.total = total;
             allUsers.forEach(user=>{
                 if (avg.user_id === user.id){
                     avg.userName= user.full_name;
